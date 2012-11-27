@@ -39,6 +39,8 @@ public class StatusBar extends SettingsPreferenceFragment implements OnPreferenc
 
     private static final String STATUS_BAR_CLOCK = "status_bar_show_clock";
 
+    private static final String STATUS_BAR_CENTERCLOCK = "status_bar_show_centerclock";
+
     private static final String STATUS_BAR_BRIGHTNESS_CONTROL = "status_bar_brightness_control";
 
     private static final String STATUS_BAR_SIGNAL = "status_bar_signal";
@@ -59,6 +61,8 @@ public class StatusBar extends SettingsPreferenceFragment implements OnPreferenc
 
     private CheckBoxPreference mStatusBarClock;
 
+    private CheckBoxPreference mStatusBarCenterClock;
+
     private CheckBoxPreference mStatusBarBrightnessControl;
 
     private CheckBoxPreference mCombinedBarAutoHide;
@@ -78,6 +82,7 @@ public class StatusBar extends SettingsPreferenceFragment implements OnPreferenc
         PreferenceScreen prefSet = getPreferenceScreen();
 
         mStatusBarClock = (CheckBoxPreference) prefSet.findPreference(STATUS_BAR_CLOCK);
+        mStatusBarCenterClock = (CheckBoxPreference) prefSet.findPreference(STATUS_BAR_CENTERCLOCK);
         mStatusBarBrightnessControl = (CheckBoxPreference) prefSet.findPreference(STATUS_BAR_BRIGHTNESS_CONTROL);
         mStatusBarAmPm = (ListPreference) prefSet.findPreference(STATUS_BAR_AM_PM);
         mStatusBarBattery = (ListPreference) prefSet.findPreference(STATUS_BAR_BATTERY);
@@ -88,6 +93,8 @@ public class StatusBar extends SettingsPreferenceFragment implements OnPreferenc
 
         mStatusBarClock.setChecked((Settings.System.getInt(getActivity().getApplicationContext().getContentResolver(),
                 Settings.System.STATUS_BAR_CLOCK, 1) == 1));
+        mStatusBarCenterClock.setChecked((Settings.System.getInt(getActivity().getApplicationContext().getContentResolver(),
+                Settings.System.STATUS_BAR_CENTERCLOCK, 0) == 1));
         mStatusBarBrightnessControl.setChecked((Settings.System.getInt(getActivity().getApplicationContext().getContentResolver(),
                 Settings.System.STATUS_BAR_BRIGHTNESS_CONTROL, 0) == 1));
 
@@ -169,6 +176,11 @@ public class StatusBar extends SettingsPreferenceFragment implements OnPreferenc
             value = mStatusBarClock.isChecked();
             Settings.System.putInt(getActivity().getApplicationContext().getContentResolver(),
                     Settings.System.STATUS_BAR_CLOCK, value ? 1 : 0);
+            return true;
+        } else if (preference == mStatusBarCenterClock) {
+            value = mStatusBarCenterClock.isChecked();
+            Settings.System.putInt(getActivity().getApplicationContext().getContentResolver(),
+                    Settings.System.STATUS_BAR_CENTERCLOCK, value ? 1 : 0);
             return true;
         } else if (preference == mStatusBarBrightnessControl) {
             value = mStatusBarBrightnessControl.isChecked();
