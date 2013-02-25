@@ -18,15 +18,20 @@ package com.android.settings.cyanogenmod;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.os.SystemProperties;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.ListPreference;
 import android.preference.PreferenceScreen;
+import android.util.Log;
 
 import com.android.settings.R;
 import com.android.settings.SettingsPreferenceFragment;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Performance Settings
@@ -36,15 +41,13 @@ public class PerformanceSettings extends SettingsPreferenceFragment
     private static final String TAG = "PerformanceSettings";
 
     private static final String USE_DITHERING_PREF = "pref_use_dithering";
-
     private static final String USE_DITHERING_PERSIST_PROP = "persist.sys.use_dithering";
-
     private static final String USE_DITHERING_DEFAULT = "1";
-
     private static final String USE_16BPP_ALPHA_PREF = "pref_use_16bpp_alpha";
-
     private static final String USE_16BPP_ALPHA_PROP = "persist.sys.use_16bpp_alpha";
+    private static final String HW_SETTINGS_KEY = "hwa_settings";
 
+<<<<<<< HEAD
     private static final String DISABLE_BOOTANIMATION_PREF = "pref_disable_bootanimation";
 
     private static final String DISABLE_BOOTANIMATION_PERSIST_PROP = "persist.sys.nobootanimation";
@@ -55,6 +58,10 @@ public class PerformanceSettings extends SettingsPreferenceFragment
 
     private CheckBoxPreference mDisableBootanimPref;
 
+=======
+    private ListPreference mUseDitheringPref;
+    private CheckBoxPreference mUse16bppAlphaPref;
+>>>>>>> bbab3d8... Move HW Rendering app to System/Performance section
     private AlertDialog alertDialog;
 
     @Override
@@ -86,6 +93,7 @@ public class PerformanceSettings extends SettingsPreferenceFragment
 
             String disableBootanimation = SystemProperties.get(DISABLE_BOOTANIMATION_PERSIST_PROP, "0");
             mDisableBootanimPref.setChecked("1".equals(disableBootanimation));
+            removePreferenceIfPackageNotInstalled(findPreference(HW_SETTINGS_KEY));
 
             /* Display the warning dialog */
             alertDialog = new AlertDialog.Builder(getActivity()).create();
@@ -129,4 +137,21 @@ public class PerformanceSettings extends SettingsPreferenceFragment
         return true;
     }
 
+    private boolean removePreferenceIfPackageNotInstalled(Preference preference) {
+        String intentUri = ((PreferenceScreen) preference).getIntent().toUri(1);
+        Pattern pattern = Pattern.compile("component=([^/]+)/");
+        Matcher matcher = pattern.matcher(intentUri);
+
+        String packageName = matcher.find() ? matcher.group(1) : null;
+        if (packageName != null) {
+            try {
+                getPackageManager().getPackageInfo(packageName, 0);
+            } catch (NameNotFoundException e) {
+                Log.e(TAG, "package " + packageName + " not installed, hiding preference.");
+                getPreferenceScreen().removePreference(preference);
+                return true;
+            }
+        }
+        return false;
+    }
 }
