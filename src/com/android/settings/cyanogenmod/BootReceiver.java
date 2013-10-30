@@ -70,14 +70,6 @@ public class BootReceiver extends BroadcastReceiver {
                 SystemProperties.set(KSM_SETTINGS_PROP, "false");
             }
         }
-<<<<<<< HEAD
-
-        if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
-            if (getUltraBrightnessMode(ctx, 0) == 1)
-                writeOneLine("/sys/devices/platform/i2c-adapter/i2c-0/0-0036/mode", "i2c_pwm");
-            else
-                writeOneLine("/sys/devices/platform/i2c-adapter/i2c-0/0-0036/mode", "i2c_pwm_als");
-        }
 
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED) || intent.getAction().equals(Intent.ACTION_MEDIA_MOUNTED)) {
             if (SystemProperties.get(SWAP_ENABLED_PROP).equals("1")) {
@@ -97,8 +89,6 @@ public class BootReceiver extends BroadcastReceiver {
             }
         }
 
-=======
->>>>>>> parent of 9e3a999... Restore ultra brightness setting on boot
     }
 
     private class runShellCommand extends Thread {
