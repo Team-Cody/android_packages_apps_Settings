@@ -197,8 +197,6 @@ public class LockscreenInterface extends SettingsPreferenceFragment implements
                 Display display = mActivity.getWindowManager().getDefaultDisplay();
                 int width = display.getWidth();
                 int height = display.getHeight();
-                int width = mActivity.getWindowManager().getDefaultDisplay().getWidth();
-                int height = mActivity.getWindowManager().getDefaultDisplay().getHeight();
                 Rect rect = new Rect();
                 Window window = mActivity.getWindow();
                 window.getDecorView().getWindowVisibleDisplayFrame(rect);
@@ -226,10 +224,6 @@ public class LockscreenInterface extends SettingsPreferenceFragment implements
                     intent.putExtra("aspectX", isPortrait ? width : height - titleBarHeight);
                     intent.putExtra("aspectY", isPortrait ? height - titleBarHeight : width);
                 }
-                boolean isPortrait = getResources().getConfiguration().orientation ==
-                    Configuration.ORIENTATION_PORTRAIT;
-                intent.putExtra("aspectX", isPortrait ? width : height - titleBarHeight);
-                intent.putExtra("aspectY", isPortrait ? height - titleBarHeight : width);
                 try {
                     wallpaperTemporary.createNewFile();
                     wallpaperTemporary.setWritable(true, false);
