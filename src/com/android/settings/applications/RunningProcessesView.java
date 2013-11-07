@@ -40,7 +40,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AbsListView.RecyclerListener;
-
+import android.util.Log;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -317,6 +317,8 @@ public class RunningProcessesView extends FrameLayout
         mMemInfoReader.readMemInfo();
         long availMem = mMemInfoReader.getFreeSize() + mMemInfoReader.getCachedSize()
                 - SECONDARY_SERVER_MEM;
+        Log.i("twn_debug", "RunningProcessesView.java: availMem set to: " + availMem);
+         
         if (availMem < 0) {
             availMem = 0;
         }
@@ -326,14 +328,20 @@ public class RunningProcessesView extends FrameLayout
                     || mLastBackgroundProcessMemory != mState.mBackgroundProcessMemory
                     || mLastAvailMemory != availMem) {
                 mLastNumBackgroundProcesses = mState.mNumBackgroundProcesses;
+				Log.i("twn_debug", "RunningProcessesView.java: mLastNumBackgroundProcesses = " + mLastBackgroundProcessMemory);
                 mLastBackgroundProcessMemory = mState.mBackgroundProcessMemory;
+                Log.i("twn_debug", "RunningProcessesView.java: mLastBackgroundProcessMemory = " + mLastBackgroundProcessMemory);
                 mLastAvailMemory = availMem;
+                Log.i("twn_debug", "RunningProcessesView.java: mLastAvailMemory = " + mLastAvailMemory);
                 long freeMem = mLastAvailMemory + mLastBackgroundProcessMemory;
+                Log.i("twn_debug", "RunningProcessesView.java: freeMem = " + freeMem);
                 String sizeStr = Formatter.formatShortFileSize(getContext(), freeMem);
+                Log.i("twn_debug", "RunningProcessesView.java: sizeStr = " + sizeStr);
                 mBackgroundProcessText.setText(getResources().getString(
                         R.string.service_background_processes, sizeStr));
                 sizeStr = Formatter.formatShortFileSize(getContext(),
                         mMemInfoReader.getTotalSize() - freeMem);
+                Log.i("twn_debug", "RunningProcessesView.java: sizeStr (2nd initalize) = " + sizeStr);
                 mForegroundProcessText.setText(getResources().getString(
                         R.string.service_foreground_processes, sizeStr));
             }
@@ -342,20 +350,28 @@ public class RunningProcessesView extends FrameLayout
                     || mLastNumServiceProcesses != mState.mNumServiceProcesses
                     || mLastServiceProcessMemory != mState.mServiceProcessMemory) {
                 mLastNumForegroundProcesses = mState.mNumForegroundProcesses;
+                Log.i("twn_debug", "RunningProcessesView.java: mLastNumForegroundProcesses = " + mLastNumForegroundProcesses);
                 mLastForegroundProcessMemory = mState.mForegroundProcessMemory;
+                Log.i("twn_debug", "RunningProcessesView.java: mLastForegroundProcessMemory = " + mLastForegroundProcessMemory);
                 mLastNumServiceProcesses = mState.mNumServiceProcesses;
+                Log.i("twn_debug", "RunningProcessesView.java: mLastNumServiceProcesses = " + mLastNumServiceProcesses);
                 mLastServiceProcessMemory = mState.mServiceProcessMemory;
+                Log.i("twn_debug", "RunningProcessesView.java: mLastServiceProcessMemory = " + mLastServiceProcessMemory);
                 /*
                 String sizeStr = Formatter.formatShortFileSize(getContext(),
                         mLastForegroundProcessMemory + mLastServiceProcessMemory);
                 mForegroundProcessText.setText(getResources().getString(
                         R.string.service_foreground_processes, sizeStr));
                 */
+                Log.i("twn_debug", "RunningProcessesView.java: sizeStr = " + (Formatter.formatShortFileSize(getContext(),
+                        mLastForegroundProcessMemory + mLastServiceProcessMemory)));
             }
             
             float totalMem = mMemInfoReader.getTotalSize();
+            Log.i("twn_debug", "RunningProcessesView.java: totalMem = " + totalMem);
             float totalShownMem = availMem + mLastBackgroundProcessMemory
                     + mLastServiceProcessMemory;
+            Log.i("twn_debug", "RunningProcessesView.java: totalShownMem = " + totalShownMem);
             mColorBar.setRatios((totalMem-totalShownMem)/totalMem,
                     mLastServiceProcessMemory/totalMem,
                     mLastBackgroundProcessMemory/totalMem);
@@ -426,6 +442,7 @@ public class RunningProcessesView extends FrameLayout
         ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
         mAm.getMemoryInfo(memInfo);
         SECONDARY_SERVER_MEM = memInfo.secondaryServerThreshold;
+        Log.i("twn_debug", "RunningProcessesView.java: SECONDARY_SERVER_MEM = " + SECONDARY_SERVER_MEM);
     }
     
     public void doPause() {

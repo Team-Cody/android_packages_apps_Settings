@@ -1021,6 +1021,7 @@ public class RunningState {
         int numForegroundProcesses = 0;
         int numServiceProcesses = 0;
         NRP = mRunningProcesses.size();
+        Log.i("twn_debug", "NRP set to: " + NRP);
         for (int i=0; i<NRP; i++) {
             ProcessItem proc = mRunningProcesses.valueAt(i);
             if (proc.mCurSeq != mSequence) {
@@ -1029,10 +1030,12 @@ public class RunningState {
                 if (proc.mRunningProcessInfo.importance >=
                         ActivityManager.RunningAppProcessInfo.IMPORTANCE_BACKGROUND) {
                     numBackgroundProcesses++;
+                    Log.i("twn_debug", "numBackgroundProcesses set to: " + numBackgroundProcesses);
                     mAllProcessItems.add(proc);
                 } else if (proc.mRunningProcessInfo.importance <=
                         ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE) {
                     numForegroundProcesses++;
+                    Log.i("twn_debug", "numForegroundProcesses set to: " + numForegroundProcesses);
                     mAllProcessItems.add(proc);
                 } else {
                     Log.i("RunningState", "Unknown non-service process: "
@@ -1040,29 +1043,43 @@ public class RunningState {
                 }
             } else {
                 numServiceProcesses++;
+                Log.i("twn_debug", "numServiceProcesses set to: " + numServiceProcesses);
             }
         }
-        
+        Log.i("twn_debug", "End of for loop!");
+        Log.i("twn_debug", "numBackgroundProcesses set to: " + numBackgroundProcesses);
+        Log.i("twn_debug", "numForegroundProcesses set to: " + numForegroundProcesses);
+        Log.i("twn_debug", "numServiceProcesses set to: " + numServiceProcesses);
         long backgroundProcessMemory = 0;
         long foregroundProcessMemory = 0;
         long serviceProcessMemory = 0;
         ArrayList<MergedItem> newBackgroundItems = null;
+        Log.i("twn_debug", "backgroundProcessMemory: " + backgroundProcessMemory);
+        Log.i("twn_debug", "foregroundProcessMemory: " + foregroundProcessMemory);
+        Log.i("twn_debug", "serviceProcessMemory: " + serviceProcessMemory);
         try {
             final int numProc = mAllProcessItems.size();
+            Log.i("twn_debug", "numProc: " + numProc);
             int[] pids = new int[numProc];
             for (int i=0; i<numProc; i++) {
                 pids[i] = mAllProcessItems.get(i).mPid;
+                Log.i("twn_debug", "Inside for loop");
+                Log.i("twn_debug", "pids[" + i + "]: " + pids[i]);
             }
-            long[] pss = ActivityManagerNative.getDefault()
-                    .getProcessPss(pids);
+            long[] pss = ActivityManagerNative.getDefault().getProcessPss(pids);
             int bgIndex = 0;
+            for (int i=0; i<pids.length; i++) {
+					Log.i("twn_debug", "pss[" + i + "]: " + pss[i]);
+			}
             for (int i=0; i<pids.length; i++) {
                 ProcessItem proc = mAllProcessItems.get(i);
                 changed |= proc.updateSize(context, pss[i], mSequence);
                 if (proc.mCurSeq == mSequence) {
+                    Log.i("twn_debug", "serviceProcessMemory to be set to: " + serviceProcessMemory + " + " + proc.mSize);
                     serviceProcessMemory += proc.mSize;
                 } else if (proc.mRunningProcessInfo.importance >=
                         ActivityManager.RunningAppProcessInfo.IMPORTANCE_BACKGROUND) {
+                    Log.i("twn_debug", "backgroundProcessMemory to be set to: " + backgroundProcessMemory + " + " + proc.mSize);
                     backgroundProcessMemory += proc.mSize;
                     MergedItem mergedItem;
                     if (newBackgroundItems != null) {
@@ -1089,6 +1106,7 @@ public class RunningState {
                 } else if (proc.mRunningProcessInfo.importance <=
                         ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE) {
                     foregroundProcessMemory += proc.mSize;
+                    Log.i("twn_debug", "foregroundProcessMemory to be set to: " + foregroundProcessMemory + " + " + proc.mSize);
                 }
             }
         } catch (RemoteException e) {
@@ -1125,6 +1143,13 @@ public class RunningState {
                 mHaveData = true;
                 mLock.notifyAll();
             }
+            
+            Log.i("twn_debug", "mNumBackgroundProcesses: " + mNumBackgroundProcesses);
+            Log.i("twn_debug", "mNumForegroundProcesses: " + mNumForegroundProcesses);
+            Log.i("twn_debug", "mNumServiceProcesses: " + mNumServiceProcesses);
+            Log.i("twn_debug", "mBackgroundProcessMemory: " + mBackgroundProcessMemory);
+            Log.i("twn_debug", "mForegroundProcessMemory: " + mForegroundProcessMemory);
+            Log.i("twn_debug", "mServiceProcessMemory: " + mServiceProcessMemory);
         }
         
         return changed;
