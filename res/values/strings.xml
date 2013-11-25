@@ -1718,35 +1718,6 @@
     <string name="pref_use_16bpp_alpha_title">16bit transparency</string>
     <string name="pref_use_16bpp_alpha_summary">Better graphics performance, but lower quality and may cause visual artifacts (requires reboot)</string>
 
-    <!-- A2SD -->
-    <string name="a2sd_settings_title">A2SD (ext) settings</string>
-    <string name="a2sd_title">A2SD (ext) settings</string>
-    <string name="a2sd_summary">App to SD card (ext) settings</string>    
-    <string name="a2sd_mode_summary">Currently installed: %S\n(changes require reboot)</string>
-    <string name="a2sd_modes_title">Available modes</string>
-    <string name="a2sd_info_title">A2SD Information</string>
-    <string name="a2sd_dialog">A2SD Information</string>
-    <string name="a2sd_loading">Loading A2SD information\u2026</string>
-    <string name="a2sd_error">Error loading A2SD information\u2026</string>
-
-    <!-- SWAP -->
-    <string name="swap_settings_title">Swap settings</string>
-    <string name="swap_title">Swap settings</string>
-    <string name="swap_summary">Swap to SD card settings</string>
-    <string name="swap_mode_summary">%S</string>
-    <string name="swap_modes_title">Swap to SD card</string>
-    <string name="swap_sizes_title">Swap size</string>
-    <string name="swap_sizes_summary">%S MB</string>
-    <string name="swap_toast_swap_removed">Previous swap removed</string>
-    <string name="swap_toast_swap_created">Swap created</string>
-    <string name="swap_toast_swap_enabled">Swap enabled</string>
-    <string name="swap_toast_swap_disabled">Swap disabled</string>
-    <string name="swap_toast_wait">Please wait...</string>
-    <string name="swap_info_title">Swap Information</string>
-    <string name="swap_dialog">Swap Information</string>
-    <string name="swap_loading">Loading Swap information\u2026</string>
-    <string name="swap_error">Error loading Swap information\u2026</string>
-
     <!-- Partition Info -->
     <string name="partition_info_title">Partition info</string>
     <string name="partition_info_system">/system</string>
