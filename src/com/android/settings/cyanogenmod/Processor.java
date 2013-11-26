@@ -58,13 +58,6 @@ public class Processor extends SettingsPreferenceFragment implements
     public static final String FREQ_MIN_FILE = "/sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq";
     public static final String SOB_PREF = "pref_cpu_set_on_boot";
 
-    private static String UV_MODULE;
-    private static final String UNDERVOLT = "pref_cpu_undervolt";
-    private static final String UNDERVOLT_PROP = "sys.undervolt";
-    private static final String UNDERVOLT_PERSIST_PROP = "persist.sys.undervolt";
-    private static final int UNDERVOLT_DEFAULT = 0;
-    private CheckBoxPreference mUndervoltPref;
-
     private static final String TAG = "CPUSettings";
 
     private String mGovernorFormat;
@@ -183,13 +176,6 @@ public class Processor extends SettingsPreferenceFragment implements
                 mMaxFrequencyPref.setOnPreferenceChangeListener(this);
             }
         }
-        // Undervolting
-        mUndervoltPref = (CheckBoxPreference) prefScreen.findPreference(UNDERVOLT);
-        mUndervoltPref.setOnPreferenceChangeListener(this);
-        if (SystemProperties.getInt(UNDERVOLT_PERSIST_PROP, UNDERVOLT_DEFAULT) == 0)
-		    mUndervoltPref.setChecked(false);
-	    else
-		    mUndervoltPref.setChecked(true);
 
         // Cur frequency
         if (!Utils.fileExists(FREQ_CUR_FILE)) {
@@ -239,24 +225,8 @@ public class Processor extends SettingsPreferenceFragment implements
 
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         String fname = "";
-        boolean value;
 
-        if (newValue != null) {
-            if (preference == mUndervoltPref) {
-                UV_MODULE = getResources().getString(R.string.undervolting_module);
-                value = mUndervoltPref.isChecked();
-                if (value==true) {
-		            SystemProperties.set(UNDERVOLT_PERSIST_PROP, "0");
-		            //remove the undervolting module
-		            insmod(UV_MODULE, false);
-                }
-                else {
-		            SystemProperties.set(UNDERVOLT_PERSIST_PROP, "1");
-		            //insmod the undervolting module
-		            insmod(UV_MODULE, true);
-                }
-		        return true;
-            }
+		if (newValue != null) {
             if (preference == mGovernorPref) {
                 fname = GOV_FILE;
             } else if (preference == mMinFrequencyPref) {
@@ -286,32 +256,6 @@ public class Processor extends SettingsPreferenceFragment implements
     private String toMHz(String mhzString) {
         return new StringBuilder().append(Integer.valueOf(mhzString) / 1000).append(" MHz")
                 .toString();
-    }
-
-    private static boolean insmod(String module, boolean insert) {
-        String command;
-    if (insert)
-        command = "/system/bin/insmod /system/lib/modules/" + module;
-    else
-        command = "/system/bin/rmmod " + module;
-        try {
-            Process process = Runtime.getRuntime().exec("su");
-            Log.e(TAG, "Executing: " + command);
-            DataOutputStream outputStream = new DataOutputStream(process.getOutputStream());
-            DataInputStream inputStream = new DataInputStream(process.getInputStream());
-            outputStream.writeBytes(command + "\n");
-            outputStream.flush();
-            outputStream.writeBytes("exit\n");
-            outputStream.flush();
-            process.waitFor();
-        }
-        catch (IOException e) {
-            return false;
-        }
-        catch (InterruptedException e) {
-            return false;
-        }
-        return true;
     }
 
 }

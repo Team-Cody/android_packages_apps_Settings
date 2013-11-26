@@ -70,28 +70,6 @@ public class BootReceiver extends BroadcastReceiver {
             }
         }
 
-        if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED) || intent.getAction().equals(Intent.ACTION_MEDIA_MOUNTED)) {
-            if (SystemProperties.get(SWAP_ENABLED_PROP).equals("1")) {
-                Log.d(TAG, "SWAP_ENABLED_PROP: " + SWAP_ENABLED_PROP);
-                String command = "swapon " + SWAP_FILE;
-                mrunShellCommand = new runShellCommand(command, ctx.getResources().getString(com.android.settings.R.string.swap_toast_swap_enabled));
-                mrunShellCommand.start();
-            }
-        }
-
-        else if ( intent.getAction().equals(Intent.ACTION_SHUTDOWN) || intent.getAction().equals(Intent.ACTION_MEDIA_EJECT)) {
-            if (SystemProperties.get(SWAP_ENABLED_PROP).equals("1")) {
-                Log.d(TAG, "SWAP_ENABLED_PROP: " + SWAP_ENABLED_PROP);
-                String command = "swapoff " + SWAP_FILE_STAGING;
-                mrunShellCommand = new runShellCommand(command, ctx.getResources().getString(com.android.settings.R.string.swap_toast_swap_disabled));
-                mrunShellCommand.start();
-            }
-        }
-        if (getUltraBrightnessMode(ctx, 0) == 1)
-            writeOneLine("/sys/devices/platform/i2c-adapter/i2c-0/0-0036/mode", "i2c_pwm");
-        else
-            writeOneLine("/sys/devices/platform/i2c-adapter/i2c-0/0-0036/mode", "i2c_pwm_als");
-
     }
 
     private void configureCPU(Context ctx) {

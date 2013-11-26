@@ -130,8 +130,8 @@ public class DevelopmentSettings extends PreferenceFragment
         addPreferencesFromResource(R.xml.development_prefs);
 
         mEnableAdb = (CheckBoxPreference) findPreference(ENABLE_ADB);
-        mAdbOverNetwork = (CheckBoxPreference) findPreference(ADB_TCPIP);
         mAdbNotify = (CheckBoxPreference) findPreference(ADB_NOTIFY);
+        mAdbOverNetwork = (CheckBoxPreference) findPreference(ADB_TCPIP);
         mKeepScreenOn = (CheckBoxPreference) findPreference(KEEP_SCREEN_ON);
         mAllowMockLocation = (CheckBoxPreference) findPreference(ALLOW_MOCK_LOCATION);
         mPassword = (PreferenceScreen) findPreference(LOCAL_BACKUP_PASSWORD);
