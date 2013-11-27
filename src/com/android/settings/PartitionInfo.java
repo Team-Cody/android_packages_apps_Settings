@@ -48,16 +48,11 @@ public class PartitionInfo extends PreferenceActivity {
     private static final String DATA_PART_SIZE = "data_part_info";
     private static final String CACHE_PART_SIZE = "cache_part_info";
     private static final String SDCARDFAT_PART_SIZE = "sdcard_part_info_fat";
-    private static final String SDCARDEXT_PART_SIZE = "sdcard_part_info_ext";
 
     private Preference mSystemPartSize;
     private Preference mDataPartSize;
     private Preference mCachePartSize;
     private Preference mSDCardPartFATSize;
-    private Preference mSDCardPartEXTSize;
-    private Preference mDeviceName;
-    
-    private boolean extfsIsMounted = false;
     
     @Override
     protected void onCreate(Bundle icicle) {
@@ -71,26 +66,12 @@ public class PartitionInfo extends PreferenceActivity {
     	mDataPartSize          = (Preference) prefSet.findPreference(DATA_PART_SIZE);
     	mCachePartSize         = (Preference) prefSet.findPreference(CACHE_PART_SIZE);
     	mSDCardPartFATSize     = (Preference) prefSet.findPreference(SDCARDFAT_PART_SIZE);
-    	mSDCardPartEXTSize     = (Preference) prefSet.findPreference(SDCARDEXT_PART_SIZE);
       
-                    if (fileExists("/dev/block/mmcblk0p2") == true) {
-			Log.i(TAG, "sd: ext partition mounted");
-			extfsIsMounted = true;
-		    } else {
-			Log.i(TAG, "sd: ext partition not mounted");
-		    }
-    	
     	try {
     	    mSystemPartSize.setSummary(ObtainFSPartSize    ("/system"));
     	    mDataPartSize.setSummary(ObtainFSPartSize      ("/data"));
     	    mCachePartSize.setSummary(ObtainFSPartSize     ("/cache"));
     	    mSDCardPartFATSize.setSummary(ObtainFSPartSize ("/sdcard"));
-
-    	    if (extfsIsMounted == true) {
-                mSDCardPartEXTSize.setSummary(ObtainFSPartSize ("/sd-ext"));
-            } else {
-                mSDCardPartEXTSize.setEnabled(false);
-            }
 
     	} catch (IllegalArgumentException e) {
     	  e.printStackTrace();
