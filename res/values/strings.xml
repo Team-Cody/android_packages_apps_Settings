@@ -853,6 +853,10 @@
     <!-- Notification Drawer #CM -->
     <string name="notification_drawer_title">Notification drawer</string>
 
+	<!-- s2w Enable #minicm4pico -->
+    <string name="s2w_enable">Sweep2Wake</string>
+    <string name="s2w_enable_summary">Enable Sweep2Wake feature</string>
+
     <!-- Combined Bar #CM -->
     <string name="combined_bar_title">Combined bar</string>
     <string name="combined_bar_auto_hide_title">Auto hide</string>

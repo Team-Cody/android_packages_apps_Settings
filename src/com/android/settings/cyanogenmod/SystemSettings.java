@@ -23,15 +23,20 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.os.ServiceManager;
+import android.os.SystemProperties;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
+import android.preference.CheckBoxPreference;
 import android.util.Log;
 import android.view.IWindowManager;
 
 import com.android.settings.R;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.Utils;
+
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class SystemSettings extends SettingsPreferenceFragment implements
         Preference.OnPreferenceChangeListener {
@@ -41,6 +46,12 @@ public class SystemSettings extends SettingsPreferenceFragment implements
     private static final String KEY_NOTIFICATION_DRAWER = "notification_drawer";
     private static final String KEY_NOTIFICATION_DRAWER_TABLET = "notification_drawer_tablet";
     private static final String KEY_NAVIGATION_BAR = "navigation_bar";
+
+    private static final String S2W = "pref_s2w_enable";
+    private static final String S2W_PROP = "sys.s2w";
+    private static final String S2W_PERSIST_PROP = "persist.sys.s2w";
+    private static final int S2W_DEFAULT = 1;
+    private CheckBoxPreference mS2WPref;
 
     private ListPreference mFontSizePref;
 
@@ -54,6 +65,15 @@ public class SystemSettings extends SettingsPreferenceFragment implements
 
         mFontSizePref = (ListPreference) findPreference(KEY_FONT_SIZE);
         mFontSizePref.setOnPreferenceChangeListener(this);
+        
+        // Sweep2Wake
+        mS2WPref = (CheckBoxPreference) prefScreen.findPreference(S2W);
+        mS2WPref.setOnPreferenceChangeListener(this);
+        if (SystemProperties.getInt(S2W_PERSIST_PROP, S2W_DEFAULT) == 0)
+        mS2WPref.setChecked(false);
+        else
+        mS2WPref.setChecked(true);
+      
         if (Utils.isScreenLarge()) {
             getPreferenceScreen().removePreference(findPreference(KEY_NOTIFICATION_DRAWER));
         } else {
@@ -130,11 +150,42 @@ public class SystemSettings extends SettingsPreferenceFragment implements
     }
 
     public boolean onPreferenceChange(Preference preference, Object objValue) {
+        if (preference == mS2WPref) {
+             boolean value;
+             value = mS2WPref.isChecked();
+             if (value==true) {
+             SystemProperties.set(S2W_PERSIST_PROP, "1");
+             writeOneLine("/sys/android_touch/s2wswitch", "1");
+             }
+             else {
+             SystemProperties.set(S2W_PERSIST_PROP, "0");
+             writeOneLine("/sys/android_touch/s2wswitch", "0");
+             }
+         return true;
+        } else {
         final String key = preference.getKey();
         if (KEY_FONT_SIZE.equals(key)) {
             writeFontSizePreference(objValue);
         }
+	    }
 
         return true;
     }
+    
+    public static boolean writeOneLine(String fname, String value) {
+        try {
+            FileWriter fw = new FileWriter(fname);
+            try {
+                fw.write(value);
+            } finally {
+                fw.close();
+            }
+        } catch (IOException e) {
+            String Error = "Error writing to " + fname + ". Exception: ";
+            Log.e(TAG, Error, e);
+            return false;
+        }
+        return true;
+    }
+
 }
