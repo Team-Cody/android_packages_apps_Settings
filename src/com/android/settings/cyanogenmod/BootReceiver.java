@@ -39,8 +39,6 @@ public class BootReceiver extends BroadcastReceiver {
     private static final String CPU_SETTINGS_PROP = "sys.cpufreq.restored";
     private static final String IOSCHED_SETTINGS_PROP = "sys.iosched.restored";
     private static final String KSM_SETTINGS_PROP = "sys.ksm.restored";
-    private static final String UNDERVOLTING_PROP = "persist.sys.undervolt";
-    private static String UV_MODULE;
 
     @Override
     public void onReceive(Context ctx, Intent intent) {
@@ -74,22 +72,6 @@ public class BootReceiver extends BroadcastReceiver {
 
     private void configureCPU(Context ctx) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-
-        if (prefs.getBoolean(Processor.SOB_PREF, false) == false) {
-            SystemProperties.set(UNDERVOLTING_PROP, "0");
-            Log.i(TAG, "Restore disabled by user preference.");
-            return;
-        }
-
-        UV_MODULE = ctx.getResources().getString(com.android.settings.R.string.undervolting_module);
-	    if (SystemProperties.getBoolean(UNDERVOLTING_PROP, false) == true) {
-            // insmod undervolting module
-            insmod(UV_MODULE, true);
-        }
-        else {
-            // remove undervolting module
-            //insmod(UV_MODULE, false);
-	}
 
         String governor = prefs.getString(Processor.GOV_PREF, null);
         String minFrequency = prefs.getString(Processor.FREQ_MIN_PREF, null);
@@ -158,29 +140,4 @@ public class BootReceiver extends BroadcastReceiver {
         Log.d(TAG, "KSM settings restored.");
     }
 
-    private static boolean insmod(String module, boolean insert) {
-        String command;
-    if (insert)
-        command = "/system/bin/insmod /system/lib/modules/" + module;
-    else
-        command = "/system/bin/rmmod " + module;
-        try {
-            Process process = Runtime.getRuntime().exec("su");
-            Log.e(TAG, "Executing: " + command);
-            DataOutputStream outputStream = new DataOutputStream(process.getOutputStream()); 
-            DataInputStream inputStream = new DataInputStream(process.getInputStream());
-            outputStream.writeBytes(command + "\n");
-            outputStream.flush();
-            outputStream.writeBytes("exit\n");
-            outputStream.flush();
-            process.waitFor();
-        }
-        catch (IOException e) {
-            return false;
-        }
-        catch (InterruptedException e) {
-            return false;
-        }
-        return true;
-    }
 }
