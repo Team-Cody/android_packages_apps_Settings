@@ -29,8 +29,8 @@ import android.util.Log;
 
 public class ReportingServiceManager extends BroadcastReceiver {
 
-    public static final long dMill = 24L * 60L * 60L * 1000L;
-    public static final long tFrame = 1L * dMill;
+    public static final long dMill = 24 * 60 * 60 * 1000;
+    public static final long tFrame = 7 * dMill;
 
     @Override
     public void onReceive(Context ctx, Intent intent) {
@@ -45,15 +45,13 @@ public class ReportingServiceManager extends BroadcastReceiver {
         SharedPreferences prefs = ctx.getSharedPreferences("CMStats", 0);
         prefs.edit().putBoolean(AnonymousStats.ANONYMOUS_ALARM_SET, false).apply();
         boolean optedIn = prefs.getBoolean(AnonymousStats.ANONYMOUS_OPT_IN, true);
-        if (!optedIn) {
+        boolean firstBoot = prefs.getBoolean(AnonymousStats.ANONYMOUS_FIRST_BOOT, true);
+        if (!optedIn || firstBoot) {
             return;
         }
         long lastSynced = prefs.getLong(AnonymousStats.ANONYMOUS_LAST_CHECKED, 0);
         if (lastSynced == 0) {
-            // never synced, so let's fake out that the last sync was just now.
-            // this will allow the user tFrame time to opt out before it will start
-            // sending up anonymous stats.
-            lastSynced = System.currentTimeMillis();
+            return;
         }
         long timeLeft = (lastSynced + tFrame) - System.currentTimeMillis();
         Intent sIntent = new Intent(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -70,6 +68,7 @@ public class ReportingServiceManager extends BroadcastReceiver {
         if (networkInfo != null && networkInfo.isConnected()) {
             SharedPreferences prefs = ctx.getSharedPreferences("CMStats", 0);
             long lastSynced = prefs.getLong(AnonymousStats.ANONYMOUS_LAST_CHECKED, 0);
+            boolean firstBoot = prefs.getBoolean(AnonymousStats.ANONYMOUS_FIRST_BOOT, true);
             boolean optedIn = prefs.getBoolean(AnonymousStats.ANONYMOUS_OPT_IN, true);
             boolean alarmSet = prefs.getBoolean(AnonymousStats.ANONYMOUS_ALARM_SET, false);
             if (alarmSet) {
@@ -81,9 +80,10 @@ public class ReportingServiceManager extends BroadcastReceiver {
             } else if (System.currentTimeMillis() - lastSynced >= tFrame) {
                 shouldSync = true;
             }
-            if (shouldSync && optedIn) {
+            if ((shouldSync && optedIn) || firstBoot) {
                 Intent sIntent = new Intent();
                 sIntent.setComponent(new ComponentName(ctx.getPackageName(), ReportingService.class.getName()));
+                sIntent.putExtra("firstBoot", firstBoot);
                 ctx.startService(sIntent);
             } else if (optedIn) {
                 setAlarm(ctx);
