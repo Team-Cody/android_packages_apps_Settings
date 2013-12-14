@@ -51,7 +51,7 @@ public class PerformanceSettings extends SettingsPreferenceFragment
 
     private static final String DISABLE_BOOTANIMATION_PERSIST_PROP = "persist.sys.nobootanimation";
 
-    private CheckBoxPreference mUseDitheringPref;
+    private ListPreference mUseDitheringPref;
 
     private CheckBoxPreference mUse16bppAlphaPref;
 
@@ -69,15 +69,12 @@ public class PerformanceSettings extends SettingsPreferenceFragment
 
             PreferenceScreen prefSet = getPreferenceScreen();
 
-            mUseDitheringPref = (CheckBoxPreference) prefSet.findPreference(USE_DITHERING_PREF);
+            mUseDitheringPref = (ListPreference) prefSet.findPreference(USE_DITHERING_PREF);
             mUse16bppAlphaPref = (CheckBoxPreference) prefSet.findPreference(USE_16BPP_ALPHA_PREF);
             mDisableBootanimPref = (CheckBoxPreference) prefSet.findPreference(DISABLE_BOOTANIMATION_PREF);
 
-            String useDithering = SystemProperties.get(USE_DITHERING_PERSIST_PROP,
-                    USE_DITHERING_DEFAULT);
-            mUseDitheringPref.setChecked("1".equals(useDithering));
             String useDithering = SystemProperties.get(USE_DITHERING_PERSIST_PROP, USE_DITHERING_DEFAULT);
-            mUseDitheringPref = (CheckBoxPreference) prefSet.findPreference(USE_DITHERING_PREF);
+            mUseDitheringPref = (ListPreference) prefSet.findPreference(USE_DITHERING_PREF);
             mUseDitheringPref.setOnPreferenceChangeListener(this);
             mUseDitheringPref.setValue(useDithering);
             mUseDitheringPref.setSummary(mUseDitheringPref.getEntry());
