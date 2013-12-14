@@ -47,7 +47,6 @@ public class PerformanceSettings extends SettingsPreferenceFragment
     private static final String USE_16BPP_ALPHA_PROP = "persist.sys.use_16bpp_alpha";
     private static final String HW_SETTINGS_KEY = "hwa_settings";
 
-<<<<<<< HEAD
     private static final String DISABLE_BOOTANIMATION_PREF = "pref_disable_bootanimation";
 
     private static final String DISABLE_BOOTANIMATION_PERSIST_PROP = "persist.sys.nobootanimation";
@@ -58,10 +57,6 @@ public class PerformanceSettings extends SettingsPreferenceFragment
 
     private CheckBoxPreference mDisableBootanimPref;
 
-=======
-    private ListPreference mUseDitheringPref;
-    private CheckBoxPreference mUse16bppAlphaPref;
->>>>>>> bbab3d8... Move HW Rendering app to System/Performance section
     private AlertDialog alertDialog;
 
     @Override
@@ -82,7 +77,7 @@ public class PerformanceSettings extends SettingsPreferenceFragment
                     USE_DITHERING_DEFAULT);
             mUseDitheringPref.setChecked("1".equals(useDithering));
             String useDithering = SystemProperties.get(USE_DITHERING_PERSIST_PROP, USE_DITHERING_DEFAULT);
-            mUseDitheringPref = (ListPreference) prefSet.findPreference(USE_DITHERING_PREF);
+            mUseDitheringPref = (CheckBoxPreference) prefSet.findPreference(USE_DITHERING_PREF);
             mUseDitheringPref.setOnPreferenceChangeListener(this);
             mUseDitheringPref.setValue(useDithering);
             mUseDitheringPref.setSummary(mUseDitheringPref.getEntry());
