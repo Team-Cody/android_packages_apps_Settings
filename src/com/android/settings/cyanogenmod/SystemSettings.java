@@ -172,7 +172,21 @@ public class SystemSettings extends SettingsPreferenceFragment implements
                   e.printStackTrace();
             }
             
-        }       
+        }
+        
+        if (KEY_CHARGING_ANIMATION.equals("key")) {
+        	
+            try {
+                if(objValue.toString().equals("true")) {
+                    Runtime.getRuntime().exec("setprop dev.zcharge true");
+                } else {
+                    Runtime.getRuntime().exec("setprop dev.zcharge false");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+        }
 
         return true;
     }
