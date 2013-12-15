@@ -16,6 +16,10 @@
 
 package com.android.settings.cyanogenmod;
 
+import java.io.DataOutputStream;
+import java.lang.Exception;
+import java.lang.Runtime;
+
 import android.app.ActivityManagerNative;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -23,6 +27,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.os.ServiceManager;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
@@ -41,8 +46,12 @@ public class SystemSettings extends SettingsPreferenceFragment implements
     private static final String KEY_NOTIFICATION_DRAWER = "notification_drawer";
     private static final String KEY_NOTIFICATION_DRAWER_TABLET = "notification_drawer_tablet";
     private static final String KEY_NAVIGATION_BAR = "navigation_bar";
+    private static final String KEY_S2W = "s2w";
+    private static final String KEY_CHARGING_ANIMATION = "charging_animation";
 
     private ListPreference mFontSizePref;
+    private CheckBoxPreference mS2WPref;
+    private CheckBoxPreference mChargingAnimPref;
 
     private final Configuration mCurConfig = new Configuration();
     
@@ -54,6 +63,13 @@ public class SystemSettings extends SettingsPreferenceFragment implements
 
         mFontSizePref = (ListPreference) findPreference(KEY_FONT_SIZE);
         mFontSizePref.setOnPreferenceChangeListener(this);
+        
+        mS2WPref = (CheckBoxPreference) findPreference(KEY_S2W);
+        mS2WPref.setOnPreferenceChangeListener(this);
+        
+        mChargingAnimPref = (CheckBoxPreference) findPreference(KEY_CHARGING_ANIMATION);
+        mChargingAnimPref.setOnPreferenceChangeListener(this);
+        
         if (Utils.isScreenLarge()) {
             getPreferenceScreen().removePreference(findPreference(KEY_NOTIFICATION_DRAWER));
         } else {
@@ -131,9 +147,32 @@ public class SystemSettings extends SettingsPreferenceFragment implements
 
     public boolean onPreferenceChange(Preference preference, Object objValue) {
         final String key = preference.getKey();
+        
         if (KEY_FONT_SIZE.equals(key)) {
             writeFontSizePreference(objValue);
         }
+        Log.d(TAG, "Inside onPreferenceChange()");
+        if (KEY_S2W.equals(key)) {
+            Process p;
+            try{
+                p = Runtime.getRuntime().exec("su");
+                DataOutputStream os = new DataOutputStream(p.getOutputStream());
+				if (objValue.toString().equals("true")) {
+			        Log.d(TAG, "writing 1");
+                    os.writeBytes("echo \"1\" > /sys/android_touch/s2wswitch\n");
+                } else {
+		            Log.d(TAG, "writing 0");
+                    os.writeBytes("echo \"0\" > /sys/android_touch/s2wswitch\n");
+                }
+                os.writeBytes("exit\n");
+                os.flush();
+                p.waitFor();
+            } catch (Exception e) {
+                  Log.d(TAG, "Shit happened");
+                  e.printStackTrace();
+            }
+            
+        }       
 
         return true;
     }
