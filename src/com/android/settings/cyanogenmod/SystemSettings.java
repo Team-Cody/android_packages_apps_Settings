@@ -158,17 +158,12 @@ public class SystemSettings extends SettingsPreferenceFragment implements
 				if (objValue.toString().equals("true")) {
 			        Log.d("twn_prefs", "Enabling S2W");
 			        Log.d("twn_prefs", "setting toggle to true");
-                    //os.writeBytes("echo \"1\" > /sys/android_touch/s2wswitch\n");
-                    Runtime.getRuntime().exec("echo \"1\" > /sys/android_touch/s2wswitch");
+                    Utils.fileWriteOneLine("/sys/android_touch/s2wswitch", "1");
                 } else {
 		            Log.d("twn_prefs", "Disabling S2W");
 			        Log.d("twn_prefs", "setting toggle to false");
-                    //os.writeBytes("echo \"0\" > /sys/android_touch/s2wswitch\n");
-                    Runtime.getRuntime().exec("echo \"0\" > /sys/android_touch/s2wswitch");
+                    Utils.fileWriteOneLine("/sys/android_touch/s2wswitch", "0");
                 }
-                //os.writeBytes("exit\n");
-                //os.flush();
-                //p.waitFor();
             } catch (Exception e) {
                   Log.d("twn_prefs", "There were gremlins!");
                   e.printStackTrace();
