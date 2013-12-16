@@ -67,6 +67,15 @@ public class BootReceiver extends BroadcastReceiver {
                 SystemProperties.set(KSM_SETTINGS_PROP, "false");
             }
         }
+        
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        boolean s2w = prefs.getBoolean("s2w", true);
+        
+        if(s2w) {
+            Utils.fileWriteOneLine("/sys/android_touch/s2wswitch", "1");
+        } else {
+            Utils.fileWriteOneLine("/sys/android_touch/s2wswitch", "0");
+        }
 
     }
 
