@@ -151,32 +151,35 @@ public class SystemSettings extends SettingsPreferenceFragment implements
         if (KEY_FONT_SIZE.equals(key)) {
             writeFontSizePreference(objValue);
         }
-        Log.d(TAG, "Inside onPreferenceChange()");
+        
         if (KEY_S2W.equals(key)) {
-            Process p;
+			Log.d("twn_prefs", "S2W toggle clicked!");
             try{
-                p = Runtime.getRuntime().exec("su");
-                DataOutputStream os = new DataOutputStream(p.getOutputStream());
 				if (objValue.toString().equals("true")) {
-			        Log.d(TAG, "writing 1");
-                    os.writeBytes("echo \"1\" > /sys/android_touch/s2wswitch\n");
+			        Log.d("twn_prefs", "Enabling S2W");
+			        Log.d("twn_prefs", "setting toggle to true");
+                    //os.writeBytes("echo \"1\" > /sys/android_touch/s2wswitch\n");
+                    Runtime.getRuntime().exec("echo \"1\" > /sys/android_touch/s2wswitch");
                 } else {
-		            Log.d(TAG, "writing 0");
-                    os.writeBytes("echo \"0\" > /sys/android_touch/s2wswitch\n");
+		            Log.d("twn_prefs", "Disabling S2W");
+			        Log.d("twn_prefs", "setting toggle to false");
+                    //os.writeBytes("echo \"0\" > /sys/android_touch/s2wswitch\n");
+                    Runtime.getRuntime().exec("echo \"0\" > /sys/android_touch/s2wswitch");
                 }
-                os.writeBytes("exit\n");
-                os.flush();
-                p.waitFor();
+                //os.writeBytes("exit\n");
+                //os.flush();
+                //p.waitFor();
             } catch (Exception e) {
-                  Log.d(TAG, "Shit happened");
+                  Log.d("twn_prefs", "There were gremlins!");
                   e.printStackTrace();
             }
             
         }
         
         if (KEY_CHARGING_ANIMATION.equals("key")) {
-        	
+			Log.d("twn_prefs", "S2W toggle clicked!");
             try {
+				Runtime.getRuntime().exec("su");
                 if(objValue.toString().equals("true")) {
                     Runtime.getRuntime().exec("setprop dev.zcharge true");
                 } else {
