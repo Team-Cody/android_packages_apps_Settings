@@ -76,6 +76,14 @@ public class BootReceiver extends BroadcastReceiver {
         } else {
             Utils.fileWriteOneLine("/sys/android_touch/s2wswitch", "0");
         }
+        
+        boolean charging_anim = prefs.getBoolean("charging_anim", true);
+        
+        if(charging_anim) {
+			SystemProperties.set("dev.zcharge", "true");
+		} else {
+			SystemProperties.set("dev.zcharge", "false");
+		}
 
     }
 

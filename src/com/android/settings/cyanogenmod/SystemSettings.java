@@ -27,6 +27,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.os.ServiceManager;
+import android.os.SystemProperties;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -174,11 +175,12 @@ public class SystemSettings extends SettingsPreferenceFragment implements
         if (KEY_CHARGING_ANIMATION.equals("key")) {
 			Log.d("twn_prefs", "S2W toggle clicked!");
             try {
-				Runtime.getRuntime().exec("su");
-                if(objValue.toString().equals("true")) {
-                    Runtime.getRuntime().exec("setprop dev.zcharge true");
+				if(objValue.toString().equals("true")) {
+                    //Runtime.getRuntime().exec("setprop dev.zcharge true");
+                    SystemProperties.set("dev.zcharge", "true");
                 } else {
-                    Runtime.getRuntime().exec("setprop dev.zcharge false");
+                    //Runtime.getRuntime().exec("setprop dev.zcharge false");
+                    SystemProperties.set("dev.zcharge", "false");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
