@@ -1565,7 +1565,7 @@
 
 <!-- SYSTEM Settings -->
     <!-- Settings main menu category heading. System (Updates, data, accessibility, about phone). [CHAR LIMIT=40] -->
-    <string name="header_category_system">SYSTEM</string>
+    <string name="header_category_interface">SYSTEM</string>
 
     <!-- Dock settings title, top level -->
     <string name="dock_settings">Dock</string>
