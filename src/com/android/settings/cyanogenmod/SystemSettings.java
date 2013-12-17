@@ -32,6 +32,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
 import android.util.Log;
+import android.util.SuCommand;
 import android.view.IWindowManager;
 
 import com.android.settings.R;
@@ -170,19 +171,16 @@ public class SystemSettings extends SettingsPreferenceFragment implements
             }
             
         }
-        
-        if (KEY_CHARGING_ANIMATION.equals("key")) {
+        Log.d(TAG, "Toggle Detected!");
+        if (KEY_CHARGING_ANIMATION.equals(key)) {
 			Log.d("twn_prefs", "S2W toggle clicked!");
-            try {
-				Runtime.getRuntime().exec("su");
+            
                 if(objValue.toString().equals("true")) {
-                    Runtime.getRuntime().exec("setprop dev.zcharge true");
+                    SuCommand.execute("setprop dev.zcharge true");
                 } else {
-                    Runtime.getRuntime().exec("setprop dev.zcharge false");
+                    SuCommand.execute("setprop dev.zcharge false");
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+           
             
         }
 
