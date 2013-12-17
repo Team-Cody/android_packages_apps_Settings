@@ -838,7 +838,7 @@
 
 <!-- PERSONALIZATION Settings #CM -->
     <!-- Settings main menu category heading. Personalization (Homescreen, Themes, Interface). [CHAR LIMIT=40] -->
-    <string name="header_category_personalization">PERSONALIZATION</string>
+    <string name="header_category_interface">PERSONALIZATION</string>
 
     <!-- Home screen settings #CM -->
     <string name="launcher_settings_title">Home screen</string>
@@ -1565,7 +1565,7 @@
 
 <!-- SYSTEM Settings -->
     <!-- Settings main menu category heading. System (Updates, data, accessibility, about phone). [CHAR LIMIT=40] -->
-    <string name="header_category_interface">SYSTEM</string>
+    <string name="header_category_system">SYSTEM</string>
 
     <!-- Dock settings title, top level -->
     <string name="dock_settings">Dock</string>
