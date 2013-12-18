@@ -23,6 +23,7 @@ import android.content.SharedPreferences;
 import android.os.SystemProperties;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.util.getCoreExec;
 
 import com.android.settings.Utils;
 
@@ -68,21 +69,35 @@ public class BootReceiver extends BroadcastReceiver {
             }
         }
         
+        /* Get shared preferences */
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+        // Check for s2w toggle value
         boolean s2w = prefs.getBoolean("s2w", true);
-        
+
         if(s2w) {
+            //s2w toggle was checked
+            Log.d(TAG, "Enabling S2W");
+            Log.d(TAG, "setting toggle to true");
             Utils.fileWriteOneLine("/sys/android_touch/s2wswitch", "1");
         } else {
+            //s2w toggle was unchecked
+            Log.d(TAG, "Disabling S2W");
+            Log.d(TAG, "setting toggle to false");
             Utils.fileWriteOneLine("/sys/android_touch/s2wswitch", "0");
         }
-        
+
+        // Check for s2w toggle value
         boolean charging_anim = prefs.getBoolean("charging_anim", true);
-        
         if(charging_anim) {
-			SystemProperties.set("dev.zcharge", "true");
+			//charging_anim toggle was checked        
+			Log.d(TAG, "Enabling Charging Animation");
+			Log.d(TAG, "setting property to true");
+            getCoreExec.execute("setprop dev.zcharge true");
 		} else {
-			SystemProperties.set("dev.zcharge", "false");
+			//charging_anim toggle was un-checked
+			Log.d(TAG, "Disabling Charging Animation");
+			Log.d(TAG, "setting property to false");
+            getCoreExec.execute("setprop dev.zcharge false");
 		}
 
     }

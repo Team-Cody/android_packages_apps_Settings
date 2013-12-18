@@ -33,7 +33,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
 import android.util.Log;
-import android.util.SuCommand;
+import android.util.getCoreExec;
 import android.view.IWindowManager;
 
 import com.android.settings.R;
@@ -180,12 +180,15 @@ public class SystemSettings extends SettingsPreferenceFragment implements
                 if(objValue.toString().equals("true")) {
 			        Log.d(TAG, "Enabling Charging Animation");
 			        Log.d(TAG, "setting property to true");
-                    SuCommand.execute("setprop dev.zcharge true");
+                    getCoreExec.execute("setprop dev.zcharge true");
                 } else {
 			        Log.d(TAG, "Disabling Charging Animation");
 			        Log.d(TAG, "setting property to false");
-                    SuCommand.execute("setprop dev.zcharge false");
+                    getCoreExec.execute("setprop dev.zcharge false");
                 }
+            } catch (Exception e) {
+                  Log.d(TAG, "There were gremlins!");
+                  e.printStackTrace();
             }
         }
 
