@@ -60,7 +60,7 @@
     <CheckBoxPreference
             android:key="s2w"
             android:summary="Do you want the awesome to be enabled?"
-            android:title="S2W ;)"
+            android:title="S2W Enabled"
             android:defaultValue="true" />
 	    
     <CheckBoxPreference
@@ -72,7 +72,7 @@
      <EditTextPreference
         android:key="carrier_label"
         android:title="Carrier Label"
-        android:summary="Change your fuckin carrier label"
+        android:summary="You wanna put your name instead of carrier label ?"
         android:selectAllOnFocus="true"
         android:inputType="textCapWords"
         android:capitalize="words"
