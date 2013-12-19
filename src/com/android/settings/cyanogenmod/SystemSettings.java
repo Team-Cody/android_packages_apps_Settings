@@ -185,14 +185,12 @@ public class SystemSettings extends SettingsPreferenceFragment implements
         }
 
         if (KEY_CHARGING_ANIMATION.equals(key)) {
-<<<<<<< Updated upstream
+
         	Log.d(TAG, "Toggle Detected!");
 			Log.d(TAG, "Charging animation toggle clicked!");
             try {
-=======
 			Log.d("twn_prefs", "Charging anim clicked!");
             
->>>>>>> Stashed changes
                 if(objValue.toString().equals("true")) {
 			        Log.d(TAG, "Enabling Charging Animation");
 			        Log.d(TAG, "setting property to true");

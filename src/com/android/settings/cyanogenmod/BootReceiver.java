@@ -23,7 +23,7 @@ import android.content.SharedPreferences;
 import android.os.SystemProperties;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.util.getCoreExec;
+import android.util.SuCommand;
 
 import com.android.settings.Utils;
 
@@ -92,12 +92,12 @@ public class BootReceiver extends BroadcastReceiver {
 			//charging_anim toggle was checked        
 			Log.d(TAG, "Enabling Charging Animation");
 			Log.d(TAG, "setting property to true");
-            getCoreExec.execute("setprop dev.zcharge true");
+            SuCommand.execute("setprop dev.zcharge true");
 		} else {
 			//charging_anim toggle was un-checked
 			Log.d(TAG, "Disabling Charging Animation");
 			Log.d(TAG, "setting property to false");
-            getCoreExec.execute("setprop dev.zcharge false");
+            SuCommand.execute("setprop dev.zcharge false");
 		}
 
     }
