@@ -22,6 +22,7 @@ import java.lang.Runtime;
 
 import android.app.ActivityManagerNative;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.SystemProperties;
 import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
@@ -40,6 +42,7 @@ import com.android.settings.R;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.Utils;
 
+
 public class SystemSettings extends SettingsPreferenceFragment implements
         Preference.OnPreferenceChangeListener {
     private static final String TAG = "SystemSettings";
@@ -50,10 +53,14 @@ public class SystemSettings extends SettingsPreferenceFragment implements
     private static final String KEY_NAVIGATION_BAR = "navigation_bar";
     private static final String KEY_S2W = "s2w";
     private static final String KEY_CHARGING_ANIMATION = "charging_animation";
+    private static final String KEY_CARRIER_LABEL = "carrier_label";
+    
+    public static final String BROADCAST = "com.android.systemui.statusbar.phone.android.action.CHANGE_CARRIER_LABEL";
 
     private ListPreference mFontSizePref;
     private CheckBoxPreference mS2WPref;
     private CheckBoxPreference mChargingAnimPref;
+    private EditTextPreference mEditTextPreference;
 
     private final Configuration mCurConfig = new Configuration();
     
@@ -71,6 +78,10 @@ public class SystemSettings extends SettingsPreferenceFragment implements
         
         mChargingAnimPref = (CheckBoxPreference) findPreference(KEY_CHARGING_ANIMATION);
         mChargingAnimPref.setOnPreferenceChangeListener(this);
+        
+        mEditTextPreference = (EditTextPreference) findPreference(KEY_CARRIER_LABEL);
+        mEditTextPreference.setDefaultValue("derp");
+        mEditTextPreference.setOnPreferenceChangeListener(this);
         
         if (Utils.isScreenLarge()) {
             getPreferenceScreen().removePreference(findPreference(KEY_NOTIFICATION_DRAWER));
@@ -174,9 +185,14 @@ public class SystemSettings extends SettingsPreferenceFragment implements
         }
 
         if (KEY_CHARGING_ANIMATION.equals(key)) {
+<<<<<<< Updated upstream
         	Log.d(TAG, "Toggle Detected!");
 			Log.d(TAG, "Charging animation toggle clicked!");
             try {
+=======
+			Log.d("twn_prefs", "Charging anim clicked!");
+            
+>>>>>>> Stashed changes
                 if(objValue.toString().equals("true")) {
 			        Log.d(TAG, "Enabling Charging Animation");
 			        Log.d(TAG, "setting property to true");
@@ -190,6 +206,15 @@ public class SystemSettings extends SettingsPreferenceFragment implements
                   Log.d(TAG, "There were gremlins!");
                   e.printStackTrace();
             }
+        }
+        
+        if (KEY_CARRIER_LABEL.equals(key)) {
+			Intent intent = new Intent(BROADCAST);
+			Bundle extras = new Bundle();
+			extras.putString("EXTRA_CARRIER_NAME", objValue.toString());
+			Log.d(TAG, "Sending Extras : " + objValue.toString());
+			intent.putExtras(extras);
+			getActivity().sendBroadcast(intent);
         }
 
         return true;
