@@ -38,6 +38,9 @@ import com.android.settings.Utils;
 import java.io.DataOutputStream;
 import java.io.DataInputStream;
 
+import java.io.File;
+import java.io.FileReader;
+
 //
 // CPU Related Settings
 //
@@ -147,7 +150,14 @@ public class Processor extends SettingsPreferenceFragment implements
         } else {
             availableFrequencies = availableFrequenciesLine.split(" ");
 
-            frequencies = new String[availableFrequencies.length];
+            int FrequenciesLength = 0;
+            if ((fileExists("/dev/block/mmcblk0p2") == true) && (fileExists("/dev/block/mmcblk0p3") == true)) {
+                 FrequenciesLength = availableFrequencies.length;
+			 } else {
+				 FrequenciesLength = (availableFrequencies.length - 8);
+			 }
+            frequencies = new String[FrequenciesLength];
+
             for (int i = 0; i < frequencies.length; i++) {
                 frequencies[i] = toMHz(availableFrequencies[i]);
             }
@@ -256,6 +266,11 @@ public class Processor extends SettingsPreferenceFragment implements
     private String toMHz(String mhzString) {
         return new StringBuilder().append(Integer.valueOf(mhzString) / 1000).append(" MHz")
                 .toString();
+    }
+
+    public boolean fileExists(String filename) {
+        File f = new File(filename);
+        return f.exists();
     }
 
 }
