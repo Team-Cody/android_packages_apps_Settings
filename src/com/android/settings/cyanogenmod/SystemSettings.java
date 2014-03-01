@@ -51,7 +51,6 @@ public class SystemSettings extends SettingsPreferenceFragment implements
     private static final String KEY_NOTIFICATION_DRAWER = "notification_drawer";
     private static final String KEY_NOTIFICATION_DRAWER_TABLET = "notification_drawer_tablet";
     private static final String KEY_NAVIGATION_BAR = "navigation_bar";
-    private static final String KEY_S2W = "s2w";
     private static final String KEY_CHARGING_ANIMATION = "charging_animation";
     private static final String KEY_CARRIER_LABEL = "carrier_label";
     
@@ -72,10 +71,7 @@ public class SystemSettings extends SettingsPreferenceFragment implements
 
         mFontSizePref = (ListPreference) findPreference(KEY_FONT_SIZE);
         mFontSizePref.setOnPreferenceChangeListener(this);
-        
-        mS2WPref = (CheckBoxPreference) findPreference(KEY_S2W);
-        mS2WPref.setOnPreferenceChangeListener(this);
-        
+
         mChargingAnimPref = (CheckBoxPreference) findPreference(KEY_CHARGING_ANIMATION);
         mChargingAnimPref.setOnPreferenceChangeListener(this);
         
@@ -163,25 +159,6 @@ public class SystemSettings extends SettingsPreferenceFragment implements
         
         if (KEY_FONT_SIZE.equals(key)) {
             writeFontSizePreference(objValue);
-        }
-        
-        if (KEY_S2W.equals(key)) {
-			Log.d(TAG, "S2W toggle clicked!");
-            try{
-				if (objValue.toString().equals("true")) {
-			        Log.d(TAG, "Enabling S2W");
-			        Log.d(TAG, "setting toggle to true");
-                    Utils.fileWriteOneLine("/sys/android_touch/s2wswitch", "1");
-                } else {
-		            Log.d(TAG, "Disabling S2W");
-			        Log.d(TAG, "setting toggle to false");
-                    Utils.fileWriteOneLine("/sys/android_touch/s2wswitch", "0");
-                }
-            } catch (Exception e) {
-                  Log.d(TAG, "There were gremlins!");
-                  e.printStackTrace();
-            }
-            
         }
 
         if (KEY_CHARGING_ANIMATION.equals(key)) {

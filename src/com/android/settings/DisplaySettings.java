@@ -55,6 +55,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private static final String KEY_ELECTRON_BEAM_CATEGORY_ANIMATION = "category_animation_options";
     private static final String KEY_WAKEUP_CATEGORY = "category_wakeup_options";
     private static final String KEY_VOLUME_WAKE = "pref_volume_wake";
+    private static final String KEY_SWEEP2WAKE = "sweep2wake";
 
     private static final String LOCKSCREEN_ROTATION_MODE = "Lock screen";
     private static final String ROTATION_ANGLE_0 = "0";
@@ -66,6 +67,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
 
     private CheckBoxPreference mLockScreenRotation;
     private CheckBoxPreference mVolumeWake;
+    private CheckBoxPreference mS2WPref;
     private CheckBoxPreference mElectronBeamAnimationOn;
     private CheckBoxPreference mElectronBeamAnimationOff;
     private PreferenceScreen mNotificationPulse;
@@ -165,6 +167,9 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
             }
 
         }
+
+        mS2WPref = (CheckBoxPreference) findPreference(KEY_SWEEP2WAKE);
+        mS2WPref.setOnPreferenceChangeListener(this);
 
     }
 
@@ -352,6 +357,25 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
                 Log.e(TAG, "could not persist screen timeout setting", e);
             }
         }
+
+        if (KEY_SWEEP2WAKE.equals(key)) {
+            Log.d(TAG, "S2W toggle clicked!");
+            try{
+				if (objValue.toString().equals("true")) {
+                    Log.d(TAG, "Enabling S2W");
+                    Log.d(TAG, "setting toggle to true");
+                    Utils.fileWriteOneLine("/sys/android_touch/s2wswitch", "1");
+                } else {
+                    Log.d(TAG, "Disabling S2W");
+                    Log.d(TAG, "setting toggle to false");
+                    Utils.fileWriteOneLine("/sys/android_touch/s2wswitch", "0");
+                }
+            } catch (Exception e) {
+                    Log.d(TAG, "There were gremlins!");
+                    e.printStackTrace();
+            }
+        }
+
         return true;
     }
 }

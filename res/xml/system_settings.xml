@@ -56,19 +56,13 @@
         android:key="navigation_bar"
         android:fragment="com.android.settings.cyanogenmod.NavBar"
         android:title="@string/navigation_bar_title" />
-	
-    <CheckBoxPreference
-            android:key="s2w"
-            android:summary="Do you want the awesome to be enabled?"
-            android:title="S2W Enabled"
-            android:defaultValue="true" />
-	    
+
     <CheckBoxPreference
             android:key="charging_animation"
             android:summary="Tick this if you want the charging animation to be shown"
             android:title="Charging Animation"
             android:defaultValue="true" />
-            
+
      <EditTextPreference
         android:key="carrier_label"
         android:title="Carrier Label"
