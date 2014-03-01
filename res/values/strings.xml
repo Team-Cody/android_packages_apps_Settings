@@ -4560,4 +4560,8 @@ found in the list of installed apps.</string>
     <string name="status_bar_bottom_title">Display at bottom</string>
     <string name="status_bar_bottom_summary">Move status bar to the bottom of the screen</string>
 
+    <!-- Carrier label -->
+    <string name="custom_carrier_label">Carrier Label</string>
+    <string name="custom_carrier_label_summary">Change carrier label</string>
+
 </resources>

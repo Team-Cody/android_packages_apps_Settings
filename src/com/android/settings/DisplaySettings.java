@@ -34,6 +34,7 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.provider.Settings;
 import android.util.Log;
+import android.util.SuCommand;
 
 import com.android.settings.cyanogenmod.DisplayRotation;
 
@@ -53,6 +54,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private static final String KEY_ELECTRON_BEAM_ANIMATION_ON = "electron_beam_animation_on";
     private static final String KEY_ELECTRON_BEAM_ANIMATION_OFF = "electron_beam_animation_off";
     private static final String KEY_ELECTRON_BEAM_CATEGORY_ANIMATION = "category_animation_options";
+    private static final String KEY_CHARGING_ANIMATION = "charging_animation";
     private static final String KEY_WAKEUP_CATEGORY = "category_wakeup_options";
     private static final String KEY_VOLUME_WAKE = "pref_volume_wake";
     private static final String KEY_SWEEP2WAKE = "sweep2wake";
@@ -70,6 +72,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private CheckBoxPreference mS2WPref;
     private CheckBoxPreference mElectronBeamAnimationOn;
     private CheckBoxPreference mElectronBeamAnimationOff;
+    private CheckBoxPreference mChargingAnimPref;
     private PreferenceScreen mNotificationPulse;
     private PreferenceScreen mBatteryPulse;
 
@@ -170,6 +173,9 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
 
         mS2WPref = (CheckBoxPreference) findPreference(KEY_SWEEP2WAKE);
         mS2WPref.setOnPreferenceChangeListener(this);
+
+        mChargingAnimPref = (CheckBoxPreference) findPreference(KEY_CHARGING_ANIMATION);
+        mChargingAnimPref.setOnPreferenceChangeListener(this);
 
     }
 
@@ -373,6 +379,28 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
             } catch (Exception e) {
                     Log.d(TAG, "There were gremlins!");
                     e.printStackTrace();
+            }
+        }
+
+        if (KEY_CHARGING_ANIMATION.equals(key)) {
+
+            Log.d(TAG, "Toggle Detected!");
+            Log.d(TAG, "Charging animation toggle clicked!");
+            try {
+			Log.d("twn_prefs", "Charging anim clicked!");
+
+                if(objValue.toString().equals("true")) {
+			        Log.d(TAG, "Enabling Charging Animation");
+			        Log.d(TAG, "setting property to true");
+                    SuCommand.execute("setprop dev.zcharge true");
+                } else {
+			        Log.d(TAG, "Disabling Charging Animation");
+			        Log.d(TAG, "setting property to false");
+                    SuCommand.execute("setprop dev.zcharge false");
+                }
+            } catch (Exception e) {
+                  Log.d(TAG, "There were gremlins!");
+                  e.printStackTrace();
             }
         }
 

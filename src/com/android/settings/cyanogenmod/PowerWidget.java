@@ -22,11 +22,13 @@ import java.util.Map;
 
 import android.app.ListFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.ListPreferenceMultiSelect;
 import android.preference.Preference;
@@ -57,6 +59,9 @@ public class PowerWidget extends SettingsPreferenceFragment implements
     private static final String UI_EXP_WIDGET_HAPTIC_FEEDBACK = "expanded_haptic_feedback";
     private static final String UI_EXP_WIDGET_PICKER = "widget_picker";
     private static final String UI_EXP_WIDGET_ORDER = "widget_order";
+    private static final String KEY_CARRIER_LABEL = "carrier_label";
+
+    public static final String BROADCAST = "com.android.systemui.statusbar.phone.android.action.CHANGE_CARRIER_LABEL";
 
     private CheckBoxPreference mPowerWidget;
     private CheckBoxPreference mPowerWidgetHideOnChange;
@@ -65,6 +70,7 @@ public class PowerWidget extends SettingsPreferenceFragment implements
     private ListPreference mPowerWidgetHapticFeedback;
     private PreferenceScreen mPowerPicker;
     private PreferenceScreen mPowerOrder;
+    private EditTextPreference mEditTextPreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,9 +113,16 @@ public class PowerWidget extends SettingsPreferenceFragment implements
                     getActivity().getApplicationContext().getContentResolver(),
                     Settings.System.EXPANDED_HAPTIC_FEEDBACK, 2)));
         }
+
+        mEditTextPreference = (EditTextPreference) findPreference(KEY_CARRIER_LABEL);
+        mEditTextPreference.setDefaultValue("derp");
+        mEditTextPreference.setOnPreferenceChangeListener(this);
+
     }
 
     public boolean onPreferenceChange(Preference preference, Object newValue) {
+        final String key = preference.getKey();
+
         if (preference == mPowerWidgetHapticFeedback) {
             int intValue = Integer.parseInt((String) newValue);
             int index = mPowerWidgetHapticFeedback.findIndexOfValue((String) newValue);
@@ -118,6 +131,17 @@ public class PowerWidget extends SettingsPreferenceFragment implements
             mPowerWidgetHapticFeedback.setSummary(mPowerWidgetHapticFeedback.getEntries()[index]);
             return true;
         }
+
+        if (KEY_CARRIER_LABEL.equals(key)) {
+			Intent intent = new Intent(BROADCAST);
+			Bundle extras = new Bundle();
+			extras.putString("EXTRA_CARRIER_NAME", newValue.toString());
+			Log.d(TAG, "Sending Extras : " + newValue.toString());
+			intent.putExtras(extras);
+			getActivity().sendBroadcast(intent);
+			return true;
+        }
+
         return false;
     }
 

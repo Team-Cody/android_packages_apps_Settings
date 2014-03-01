@@ -57,20 +57,4 @@
         android:fragment="com.android.settings.cyanogenmod.NavBar"
         android:title="@string/navigation_bar_title" />
 
-    <CheckBoxPreference
-            android:key="charging_animation"
-            android:summary="Tick this if you want the charging animation to be shown"
-            android:title="Charging Animation"
-            android:defaultValue="true" />
-
-     <EditTextPreference
-        android:key="carrier_label"
-        android:title="Carrier Label"
-        android:summary="You wanna put your name instead of carrier label ?"
-        android:selectAllOnFocus="true"
-        android:inputType="textCapWords"
-        android:capitalize="words"
-        android:singleLine="true"
-        android:maxLines="1" />
-
 </PreferenceScreen>

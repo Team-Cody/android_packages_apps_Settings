@@ -22,7 +22,6 @@ import java.lang.Runtime;
 
 import android.app.ActivityManagerNative;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -30,12 +29,10 @@ import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.SystemProperties;
 import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
 import android.util.Log;
-import android.util.SuCommand;
 import android.view.IWindowManager;
 
 import com.android.settings.R;
@@ -51,15 +48,8 @@ public class SystemSettings extends SettingsPreferenceFragment implements
     private static final String KEY_NOTIFICATION_DRAWER = "notification_drawer";
     private static final String KEY_NOTIFICATION_DRAWER_TABLET = "notification_drawer_tablet";
     private static final String KEY_NAVIGATION_BAR = "navigation_bar";
-    private static final String KEY_CHARGING_ANIMATION = "charging_animation";
-    private static final String KEY_CARRIER_LABEL = "carrier_label";
-    
-    public static final String BROADCAST = "com.android.systemui.statusbar.phone.android.action.CHANGE_CARRIER_LABEL";
 
     private ListPreference mFontSizePref;
-    private CheckBoxPreference mS2WPref;
-    private CheckBoxPreference mChargingAnimPref;
-    private EditTextPreference mEditTextPreference;
 
     private final Configuration mCurConfig = new Configuration();
     
@@ -72,13 +62,6 @@ public class SystemSettings extends SettingsPreferenceFragment implements
         mFontSizePref = (ListPreference) findPreference(KEY_FONT_SIZE);
         mFontSizePref.setOnPreferenceChangeListener(this);
 
-        mChargingAnimPref = (CheckBoxPreference) findPreference(KEY_CHARGING_ANIMATION);
-        mChargingAnimPref.setOnPreferenceChangeListener(this);
-        
-        mEditTextPreference = (EditTextPreference) findPreference(KEY_CARRIER_LABEL);
-        mEditTextPreference.setDefaultValue("derp");
-        mEditTextPreference.setOnPreferenceChangeListener(this);
-        
         if (Utils.isScreenLarge()) {
             getPreferenceScreen().removePreference(findPreference(KEY_NOTIFICATION_DRAWER));
         } else {
@@ -159,37 +142,6 @@ public class SystemSettings extends SettingsPreferenceFragment implements
         
         if (KEY_FONT_SIZE.equals(key)) {
             writeFontSizePreference(objValue);
-        }
-
-        if (KEY_CHARGING_ANIMATION.equals(key)) {
-
-        	Log.d(TAG, "Toggle Detected!");
-			Log.d(TAG, "Charging animation toggle clicked!");
-            try {
-			Log.d("twn_prefs", "Charging anim clicked!");
-            
-                if(objValue.toString().equals("true")) {
-			        Log.d(TAG, "Enabling Charging Animation");
-			        Log.d(TAG, "setting property to true");
-                    SuCommand.execute("setprop dev.zcharge true");
-                } else {
-			        Log.d(TAG, "Disabling Charging Animation");
-			        Log.d(TAG, "setting property to false");
-                    SuCommand.execute("setprop dev.zcharge false");
-                }
-            } catch (Exception e) {
-                  Log.d(TAG, "There were gremlins!");
-                  e.printStackTrace();
-            }
-        }
-        
-        if (KEY_CARRIER_LABEL.equals(key)) {
-			Intent intent = new Intent(BROADCAST);
-			Bundle extras = new Bundle();
-			extras.putString("EXTRA_CARRIER_NAME", objValue.toString());
-			Log.d(TAG, "Sending Extras : " + objValue.toString());
-			intent.putExtras(extras);
-			getActivity().sendBroadcast(intent);
         }
 
         return true;
